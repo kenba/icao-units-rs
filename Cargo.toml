@@ -3,7 +3,12 @@ name = "icao-units"
 version = "0.1.0"
 authors = ["Ken Barker <ken.barker@via-technology.aero>"]
 description = "Units for air navigation as defined in ICAO Annex 5."
+documentation = "https://docs.rs/icao-units/"
+homepage = "https://github.com/kenba/icao-units-rs"
+repository = "https://github.com/kenba/icao-units-rs"
 readme = "README.md"
+keywords = ["icao", "units", "si", "conversion"]
+categories = ["aerospace"]
 license = "MIT"
 edition = "2021"
 
