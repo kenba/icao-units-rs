@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+//! [![crates.io](https://img.shields.io/crates/v/icao-units.svg)](https://crates.io/crates/icao-units)
+//! [![docs.io](https://docs.rs/icao-units/badge.svg)](https://docs.rs/icao-units/)
 //! [![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/license/mit/)
 //! [![Rust](https://github.com/kenba/icao-units-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/kenba/icao-units-rs/actions)
 //! [![codecov](https://codecov.io/gh/kenba/icao-units-rs/graph/badge.svg?token=6DTOY9Y4BT)](https://codecov.io/gh/kenba/icao-units-rs)

@@ -6,7 +6,6 @@ description = "Units for air navigation as defined in ICAO Annex 5."
 readme = "README.md"
 license = "MIT"
 edition = "2021"
-publish = false
 
 [lints.rust]
 unsafe_code = "forbid"
