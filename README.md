@@ -1,4 +1,4 @@
-# icao-units-rs
+# icao-units
 
 [![crates.io](https://img.shields.io/crates/v/icao-units.svg)](https://crates.io/crates/icao-units)
 [![docs.io](https://docs.rs/icao-units/badge.svg)](https://docs.rs/icao-units/)
@@ -9,7 +9,7 @@
 Units for air navigation as defined in [ICAO Annex 5](https://store.icao.int/en/annex-5-units-of-measurement-to-be-used-in-the-air-and-ground-services).
 
 The library defines SI units used by the [International Standard Atmosphere](https://en.wikipedia.org/wiki/International_Standard_Atmosphere) (ISA), the non-SI units defined in
- `ICAO Annex 5` Table 3-3 and [FlightLevel](https://en.wikipedia.org/wiki/Flight_level).
+ `ICAO Annex 5` Table 3-3 and [flight level](https://en.wikipedia.org/wiki/Flight_level).
 
 ## Design
 

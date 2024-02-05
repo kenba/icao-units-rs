@@ -23,10 +23,10 @@
 //! [![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/license/mit/)
 //! [![Rust](https://github.com/kenba/icao-units-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/kenba/icao-units-rs/actions)
 //! [![codecov](https://codecov.io/gh/kenba/icao-units-rs/graph/badge.svg?token=6DTOY9Y4BT)](https://codecov.io/gh/kenba/icao-units-rs)
-//! 
+//!
 //! Units for air navigation as defined in
 //! [ICAO Annex 5](https://store.icao.int/en/annex-5-units-of-measurement-to-be-used-in-the-air-and-ground-services).
-//! 
+//!
 //! The library defines SI units used by the
 //! [International Standard Atmosphere](https://en.wikipedia.org/wiki/International_Standard_Atmosphere) (ISA),
 //! the non-SI units defined in  `ICAO Annex 5` Table 3-3 and

@@ -25,19 +25,23 @@ use crate::si;
 use std::convert::From;
 
 /// A Nautical Mile `newtype` for representing distance.  
-/// Used in navigation, generally for distances in excess of `4_000` m.
+/// Used in navigation, generally for distances in excess of `4 000` m.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct NauticalMiles(pub f64);
 
+/// The length of a Nautical Mile (NM) in metres (m).  
+/// Definition from ICAO Annex 5 Table 3-3.
+pub const METRES_PER_NAUTICAL_MILE: f64 = 1_852.0;
+
 impl From<si::Metres> for NauticalMiles {
     fn from(a: si::Metres) -> Self {
-        Self(a.0 / 1852.0)
+        Self(a.0 / METRES_PER_NAUTICAL_MILE)
     }
 }
 
 impl From<NauticalMiles> for si::Metres {
     fn from(a: NauticalMiles) -> Self {
-        Self(a.0 * 1852.0)
+        Self(a.0 * METRES_PER_NAUTICAL_MILE)
     }
 }
 
@@ -47,15 +51,19 @@ impl From<NauticalMiles> for si::Metres {
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct Feet(pub f64);
 
+/// The length of a foot (ft) in metres (m).  
+/// Definition from ICAO Annex 5 Table 3-3.
+pub const METRES_PER_FOOT: f64 = 0.304_8;
+
 impl From<si::Metres> for Feet {
     fn from(a: si::Metres) -> Self {
-        Self(a.0 / 0.304_8)
+        Self(a.0 / METRES_PER_FOOT)
     }
 }
 
 impl From<Feet> for si::Metres {
     fn from(a: Feet) -> Self {
-        Self(a.0 * 0.304_8)
+        Self(a.0 * METRES_PER_FOOT)
     }
 }
 
@@ -67,15 +75,20 @@ impl From<Feet> for si::Metres {
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct Knots(pub f64);
 
+/// The conversion factor to Knots (kt) from metres per second (m/s).  
+/// Calculated from `METRES_PER_NAUTICAL_MILE` / seconds in an hour,
+/// because it is more precise than the ICAO definition: 0.514 444.
+pub const METRES_PER_SECOND_TO_KNOTS: f64 = METRES_PER_NAUTICAL_MILE / 3600.0;
+
 impl From<si::MetresPerSecond> for Knots {
     fn from(a: si::MetresPerSecond) -> Self {
-        Self(a.0 / 0.514_444)
+        Self(a.0 / METRES_PER_SECOND_TO_KNOTS)
     }
 }
 
 impl From<Knots> for si::MetresPerSecond {
     fn from(a: Knots) -> Self {
-        Self(a.0 * 0.514_444)
+        Self(a.0 * METRES_PER_SECOND_TO_KNOTS)
     }
 }
 
@@ -86,15 +99,18 @@ impl From<Knots> for si::MetresPerSecond {
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct FlightLevel(pub f64);
 
+/// The height of a flight level (FL) in feet (ft).
+pub const FEET_PER_FLIGHT_LEVEL: f64 = 100.0;
+
 impl From<Feet> for FlightLevel {
     fn from(a: Feet) -> Self {
-        Self(a.0 / 100.0)
+        Self(a.0 / FEET_PER_FLIGHT_LEVEL)
     }
 }
 
 impl From<FlightLevel> for Feet {
     fn from(a: FlightLevel) -> Self {
-        Self(a.0 * 100.0)
+        Self(a.0 * FEET_PER_FLIGHT_LEVEL)
     }
 }
 
@@ -160,7 +176,10 @@ mod tests {
     fn test_convert_knots() {
         let one_knot = Knots(1.0);
         let metres_per_second = si::MetresPerSecond::from(one_knot);
-        assert_eq!(0.514_444, metres_per_second.0);
+
+        // Definition from ICAO Annex 5 Table 3-3 is 0.514 444
+        assert!(0.514_444 < metres_per_second.0);
+        assert!(0.514_444_5 > metres_per_second.0);
 
         let result = Knots::from(metres_per_second);
         assert_eq!(1.0, result.0);
