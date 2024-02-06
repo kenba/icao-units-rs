@@ -22,7 +22,7 @@
 //! See ICAO Annex 5 Chapter 3, Table 3-3 and Chapter 4, Table 4-1.
 
 use crate::si;
-use std::convert::From;
+use core::convert::From;
 
 /// A Nautical Mile `newtype` for representing distance.  
 /// Used in navigation, generally for distances in excess of `4 000` m.

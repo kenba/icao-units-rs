@@ -8,7 +8,7 @@ homepage = "https://github.com/kenba/icao-units-rs"
 repository = "https://github.com/kenba/icao-units-rs"
 readme = "README.md"
 keywords = ["icao", "units", "si", "conversion"]
-categories = ["aerospace"]
+categories = ["aerospace", "no-std"]
 license = "MIT"
 edition = "2021"
 
