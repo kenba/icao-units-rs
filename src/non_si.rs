@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Via Technology Ltd.
+// Copyright (c) 2024 Ken Barker
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -23,10 +23,11 @@
 
 use crate::si;
 use core::convert::From;
+use serde::{Deserialize, Serialize};
 
 /// A Nautical Mile `newtype` for representing distance.  
 /// Used in navigation, generally for distances in excess of `4 000` m.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct NauticalMiles(pub f64);
 
 /// The length of a Nautical Mile (NM) in metres (m).  
@@ -48,7 +49,7 @@ impl From<NauticalMiles> for si::Metres {
 /// A Feet `newtype` for representing altitude.  
 /// Used to report aircraft altitude below the
 /// [transition altitude](https://en.wikipedia.org/wiki/Flight_level#Transition_altitude).
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Feet(pub f64);
 
 /// The length of a foot (ft) in metres (m).  
@@ -72,7 +73,7 @@ impl From<Feet> for si::Metres {
 /// MACH number.  
 /// A conversion of 1 kt = 0.5 m/s is used in ICAO Annexes for the representation
 /// of wind speed.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Knots(pub f64);
 
 /// The conversion factor to Knots (kt) from metres per second (m/s).  
@@ -96,7 +97,7 @@ impl From<Knots> for si::MetresPerSecond {
 /// A `FlightLevel` is 100 `Feet`.  
 /// Used to report aircraft altitude above the
 /// [transition altitude](https://en.wikipedia.org/wiki/Flight_level#Transition_altitude).
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct FlightLevel(pub f64);
 
 /// The height of a flight level (FL) in feet (ft).
@@ -127,6 +128,13 @@ mod tests {
         let two_nm = NauticalMiles(2.0);
         assert!(one_nm < two_nm);
 
+        let serialized = serde_json::to_string(&one_nm).unwrap();
+        let deserialized: NauticalMiles = serde_json::from_str(&serialized).unwrap();
+        assert_eq!(one_nm, deserialized);
+
+        let bad_text = "junk";
+        let _serde_error = serde_json::from_str::<NauticalMiles>(&bad_text).unwrap_err();
+
         print!("NauticalMiles: {:?}", one_nm);
     }
 
@@ -148,6 +156,13 @@ mod tests {
         let two_ft = Feet(2.0);
         assert!(one_ft < two_ft);
 
+        let serialized: String = serde_json::to_string(&one_ft).unwrap();
+        let deserialized: Feet = serde_json::from_str(&serialized).unwrap();
+        assert_eq!(one_ft, deserialized);
+
+        let bad_text = "junk";
+        let _serde_error = serde_json::from_str::<Feet>(&bad_text).unwrap_err();
+
         print!("Feet: {:?}", one_ft);
     }
 
@@ -168,6 +183,13 @@ mod tests {
         assert_eq!(one_kt, one_kt_clone);
         let two_kt = Knots(2.0);
         assert!(one_kt < two_kt);
+
+        let serialized = serde_json::to_string(&one_kt).unwrap();
+        let deserialized: Knots = serde_json::from_str(&serialized).unwrap();
+        assert_eq!(one_kt, deserialized);
+
+        let bad_text = "junk";
+        let _serde_error = serde_json::from_str::<Knots>(&bad_text).unwrap_err();
 
         print!("Knots: {:?}", one_kt);
     }
@@ -192,6 +214,13 @@ mod tests {
         assert_eq!(one_fl, one_fl_clone);
         let two_fl = FlightLevel(2.0);
         assert!(one_fl < two_fl);
+
+        let serialized = serde_json::to_string(&one_fl).unwrap();
+        let deserialized: FlightLevel = serde_json::from_str(&serialized).unwrap();
+        assert_eq!(one_fl, deserialized);
+
+        let bad_text = "junk";
+        let _serde_error = serde_json::from_str::<FlightLevel>(&bad_text).unwrap_err();
 
         print!("FlightLevel: {:?}", one_fl);
     }

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Via Technology Ltd.
+// Copyright (c) 2024 Ken Barker
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 //! [Annex 5](https://store.icao.int/en/annex-5-units-of-measurement-to-be-used-in-the-air-and-ground-services).
 //!
 //! The library defines:
-//! 
+//!
 //! - the [SI](https://en.wikipedia.org/wiki/International_System_of_Units)
 //! units used in the [International Standard Atmosphere](https://en.wikipedia.org/wiki/International_Standard_Atmosphere) (ISA),
 //! - the non-SI units defined in `ICAO Annex 5` Table 3-3
@@ -38,7 +38,7 @@
 //! idiom to represent ICAO units and the [From](https://doc.rust-lang.org/core/convert/trait.From.html)
 //! trait to convert between SI and non-SI units using the conversion factors
 //! defined in `ICAO Annex 5` Table 3-3.
-//! 
+//!
 //! The library is declared [no_std](https://docs.rust-embedded.org/book/intro/no-std.html)
 //! so it can be used in embedded applications.
 
