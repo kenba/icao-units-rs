@@ -30,9 +30,9 @@
 //! The library defines:
 //!
 //! - the [SI](https://en.wikipedia.org/wiki/International_System_of_Units)
-//! units used in the [International Standard Atmosphere](https://en.wikipedia.org/wiki/International_Standard_Atmosphere) (ISA),
-//! - the non-SI units defined in `ICAO Annex 5` Table 3-3
-//! - and [flight level](https://en.wikipedia.org/wiki/Flight_level).
+//!   units used in the [International Standard Atmosphere](https://en.wikipedia.org/wiki/International_Standard_Atmosphere) (ISA),
+//! - the non-SI units defined in `ICAO Annex 5` Table 3-3,
+//! - and conversions between SI and non-SI units.
 //!
 //! The library uses the [newtype](https://rust-unofficial.github.io/patterns/patterns/behavioural/newtype.html)
 //! idiom to represent ICAO units and the [From](https://doc.rust-lang.org/core/convert/trait.From.html)

@@ -25,12 +25,14 @@ use crate::si;
 use core::convert::From;
 use serde::{Deserialize, Serialize};
 
-/// A Nautical Mile `newtype` for representing distance.  
+/// A Nautical Mile `newtype` for representing distance.
+///
 /// Used in navigation, generally for distances in excess of `4 000` m.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct NauticalMiles(pub f64);
 
-/// The length of a Nautical Mile (NM) in metres (m).  
+/// The length of a Nautical Mile (NM) in metres (m).
+///
 /// Definition from ICAO Annex 5 Table 3-3.
 pub const METRES_PER_NAUTICAL_MILE: f64 = 1_852.0;
 
@@ -46,13 +48,15 @@ impl From<NauticalMiles> for si::Metres {
     }
 }
 
-/// A Feet `newtype` for representing altitude.  
+/// A Feet `newtype` for representing altitude.
+///
 /// Used to report aircraft altitude below the
 /// [transition altitude](https://en.wikipedia.org/wiki/Flight_level#Transition_altitude).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Feet(pub f64);
 
-/// The length of a foot (ft) in metres (m).  
+/// The length of a foot (ft) in metres (m).
+///
 /// Definition from ICAO Annex 5 Table 3-3.
 pub const METRES_PER_FOOT: f64 = 0.304_8;
 
@@ -69,14 +73,14 @@ impl From<Feet> for si::Metres {
 }
 
 /// A Knots `newtype` for representing speed.
-/// Airspeed is sometimes reported in flight operations in terms of the ratio
-/// MACH number.  
+///
 /// A conversion of 1 kt = 0.5 m/s is used in ICAO Annexes for the representation
 /// of wind speed.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Knots(pub f64);
 
-/// The conversion factor to Knots (kt) from metres per second (m/s).  
+/// The conversion factor to Knots (kt) from metres per second (m/s).
+///
 /// Calculated from `METRES_PER_NAUTICAL_MILE` / seconds in an hour,
 /// because it is more precise than the ICAO definition: 0.514 444.
 pub const METRES_PER_SECOND_TO_KNOTS: f64 = METRES_PER_NAUTICAL_MILE / 3600.0;
@@ -90,28 +94,6 @@ impl From<si::MetresPerSecond> for Knots {
 impl From<Knots> for si::MetresPerSecond {
     fn from(a: Knots) -> Self {
         Self(a.0 * METRES_PER_SECOND_TO_KNOTS)
-    }
-}
-
-/// A `FlightLevel` `newtype.`  
-/// A `FlightLevel` is 100 `Feet`.  
-/// Used to report aircraft altitude above the
-/// [transition altitude](https://en.wikipedia.org/wiki/Flight_level#Transition_altitude).
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
-pub struct FlightLevel(pub f64);
-
-/// The height of a flight level (FL) in feet (ft).
-pub const FEET_PER_FLIGHT_LEVEL: f64 = 100.0;
-
-impl From<Feet> for FlightLevel {
-    fn from(a: Feet) -> Self {
-        Self(a.0 / FEET_PER_FLIGHT_LEVEL)
-    }
-}
-
-impl From<FlightLevel> for Feet {
-    fn from(a: FlightLevel) -> Self {
-        Self(a.0 * FEET_PER_FLIGHT_LEVEL)
     }
 }
 
@@ -204,34 +186,6 @@ mod tests {
         assert!(0.514_444_5 > metres_per_second.0);
 
         let result = Knots::from(metres_per_second);
-        assert_eq!(1.0, result.0);
-    }
-
-    #[test]
-    fn test_flight_level() {
-        let one_fl = FlightLevel(1.0);
-        let one_fl_clone = one_fl.clone();
-        assert_eq!(one_fl, one_fl_clone);
-        let two_fl = FlightLevel(2.0);
-        assert!(one_fl < two_fl);
-
-        let serialized = serde_json::to_string(&one_fl).unwrap();
-        let deserialized: FlightLevel = serde_json::from_str(&serialized).unwrap();
-        assert_eq!(one_fl, deserialized);
-
-        let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<FlightLevel>(&bad_text).unwrap_err();
-
-        print!("FlightLevel: {:?}", one_fl);
-    }
-
-    #[test]
-    fn test_convert_flight_level() {
-        let one_fl = FlightLevel(1.0);
-        let feet = Feet::from(one_fl);
-        assert_eq!(100.0, feet.0);
-
-        let result = FlightLevel::from(feet);
         assert_eq!(1.0, result.0);
     }
 }
