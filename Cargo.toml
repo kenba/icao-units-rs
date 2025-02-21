@@ -10,7 +10,7 @@ readme = "README.md"
 keywords = ["icao", "units", "si", "conversion"]
 categories = ["aerospace", "no-std"]
 license = "MIT"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 serde = { version = "1.0", default-features = false, features = ["derive"] }
