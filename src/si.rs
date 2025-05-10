@@ -27,6 +27,7 @@ use serde::{Deserialize, Serialize};
 
 /// A `Metres` `newtype` for representing distance.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct Metres(pub f64);
 
 impl Default for Metres {
@@ -77,6 +78,7 @@ impl SubAssign for Metres {
 
 /// A `MetresPerSecond` `newtype` for representing speed.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct MetresPerSecond(pub f64);
 
 impl Default for MetresPerSecond {
@@ -127,10 +129,12 @@ impl SubAssign for MetresPerSecond {
 
 /// A `MetresPerSecondSquared` `newtype` for representing acceleration.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct MetresPerSecondSquared(pub f64);
 
 /// A Kelvin `newtype` for representing temperature.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct Kelvin(pub f64);
 
 impl Default for Kelvin {
@@ -181,10 +185,12 @@ impl SubAssign for Kelvin {
 
 /// A Pascals `newtype` for representing pressure.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct Pascals(pub f64);
 
 /// A Kilograms `newtype` for representing mass.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct Kilograms(pub f64);
 
 impl Default for Kilograms {

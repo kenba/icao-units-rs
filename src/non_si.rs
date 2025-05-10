@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-//! Non-SI units used in air navigation and conversions to their SI equivalents.  
+//! Non-SI units used in air navigation and conversions to their SI equivalents.
 //! See ICAO Annex 5 Chapter 3, Table 3-3 and Chapter 4, Table 4-1.
 
 use crate::si;
@@ -29,6 +29,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// Used in navigation, generally for distances in excess of `4 000` m.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct NauticalMiles(pub f64);
 
 /// The length of a Nautical Mile (NM) in metres (m).
@@ -53,6 +54,7 @@ impl From<NauticalMiles> for si::Metres {
 /// Used to report aircraft altitude below the
 /// [transition altitude](https://en.wikipedia.org/wiki/Flight_level#Transition_altitude).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct Feet(pub f64);
 
 /// The length of a foot (ft) in metres (m).
@@ -77,6 +79,7 @@ impl From<Feet> for si::Metres {
 /// A conversion of 1 kt = 0.5 m/s is used in ICAO Annexes for the representation
 /// of wind speed.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
 pub struct Knots(pub f64);
 
 /// The conversion factor to Knots (kt) from metres per second (m/s).
