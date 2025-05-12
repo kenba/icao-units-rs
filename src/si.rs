@@ -132,17 +132,17 @@ impl SubAssign for MetresPerSecond {
 #[repr(transparent)]
 pub struct MetresPerSecondSquared(pub f64);
 
-/// A Kelvin `newtype` for representing temperature.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
-#[repr(transparent)]
-pub struct Kelvin(pub f64);
-
-impl Default for Kelvin {
+impl Default for MetresPerSecondSquared {
     #[must_use]
     fn default() -> Self {
         Self(0.0)
     }
 }
+
+/// A Kelvin `newtype` for representing temperature.
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
+pub struct Kelvin(pub f64);
 
 impl Add for Kelvin {
     type Output = Self;
@@ -275,7 +275,7 @@ mod tests {
         let bad_text = "junk";
         let _serde_error = serde_json::from_str::<Metres>(&bad_text).unwrap_err();
 
-        print!("Kelvin: {:?}", one_m);
+        print!("Metres: {:?}", one_m);
     }
 
     #[test]
@@ -310,6 +310,8 @@ mod tests {
 
     #[test]
     fn test_metres_per_second_squared() {
+        let zero_mps2 = MetresPerSecondSquared::default();
+        assert_eq!(MetresPerSecondSquared(0.0), zero_mps2);
         let one_mps2 = MetresPerSecondSquared(1.0);
         let one_mps2_clone = one_mps2.clone();
         assert_eq!(one_mps2, one_mps2_clone);
@@ -328,8 +330,6 @@ mod tests {
 
     #[test]
     fn test_kelvin() {
-        let zero_k = Kelvin::default();
-        assert_eq!(Kelvin(0.0), zero_k);
         let one_k = Kelvin(1.0);
         let mut one_k_clone = one_k.clone();
         assert_eq!(one_k, one_k_clone);
