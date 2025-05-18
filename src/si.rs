@@ -31,7 +31,6 @@ use serde::{Deserialize, Serialize};
 pub struct Metres(pub f64);
 
 impl Default for Metres {
-    #[must_use]
     fn default() -> Self {
         Self(0.0)
     }
@@ -40,7 +39,6 @@ impl Default for Metres {
 impl Add for Metres {
     type Output = Self;
 
-    #[must_use]
     fn add(self, other: Self) -> Self::Output {
         Self(self.0 + other.0)
     }
@@ -55,7 +53,6 @@ impl AddAssign for Metres {
 impl Neg for Metres {
     type Output = Self;
 
-    #[must_use]
     fn neg(self) -> Self::Output {
         Self(0.0 - self.0)
     }
@@ -64,7 +61,6 @@ impl Neg for Metres {
 impl Sub for Metres {
     type Output = Self;
 
-    #[must_use]
     fn sub(self, other: Self) -> Self::Output {
         Self(self.0 - other.0)
     }
@@ -82,7 +78,6 @@ impl SubAssign for Metres {
 pub struct MetresPerSecond(pub f64);
 
 impl Default for MetresPerSecond {
-    #[must_use]
     fn default() -> Self {
         Self(0.0)
     }
@@ -91,7 +86,6 @@ impl Default for MetresPerSecond {
 impl Add for MetresPerSecond {
     type Output = Self;
 
-    #[must_use]
     fn add(self, other: Self) -> Self::Output {
         Self(self.0 + other.0)
     }
@@ -106,7 +100,6 @@ impl AddAssign for MetresPerSecond {
 impl Neg for MetresPerSecond {
     type Output = Self;
 
-    #[must_use]
     fn neg(self) -> Self::Output {
         Self(0.0 - self.0)
     }
@@ -115,7 +108,6 @@ impl Neg for MetresPerSecond {
 impl Sub for MetresPerSecond {
     type Output = Self;
 
-    #[must_use]
     fn sub(self, other: Self) -> Self::Output {
         Self(self.0 - other.0)
     }
@@ -133,7 +125,6 @@ impl SubAssign for MetresPerSecond {
 pub struct MetresPerSecondSquared(pub f64);
 
 impl Default for MetresPerSecondSquared {
-    #[must_use]
     fn default() -> Self {
         Self(0.0)
     }
@@ -147,7 +138,6 @@ pub struct Kelvin(pub f64);
 impl Add for Kelvin {
     type Output = Self;
 
-    #[must_use]
     fn add(self, other: Self) -> Self::Output {
         Self(self.0 + other.0)
     }
@@ -162,7 +152,6 @@ impl AddAssign for Kelvin {
 impl Neg for Kelvin {
     type Output = Self;
 
-    #[must_use]
     fn neg(self) -> Self::Output {
         Self(0.0 - self.0)
     }
@@ -171,7 +160,6 @@ impl Neg for Kelvin {
 impl Sub for Kelvin {
     type Output = Self;
 
-    #[must_use]
     fn sub(self, other: Self) -> Self::Output {
         Self(self.0 - other.0)
     }
@@ -194,7 +182,6 @@ pub struct Pascals(pub f64);
 pub struct Kilograms(pub f64);
 
 impl Default for Kilograms {
-    #[must_use]
     fn default() -> Self {
         Self(0.0)
     }
@@ -203,7 +190,6 @@ impl Default for Kilograms {
 impl Add for Kilograms {
     type Output = Self;
 
-    #[must_use]
     fn add(self, other: Self) -> Self::Output {
         Self(self.0 + other.0)
     }
@@ -218,7 +204,6 @@ impl AddAssign for Kilograms {
 impl Neg for Kilograms {
     type Output = Self;
 
-    #[must_use]
     fn neg(self) -> Self::Output {
         Self(0.0 - self.0)
     }
@@ -227,7 +212,6 @@ impl Neg for Kilograms {
 impl Sub for Kilograms {
     type Output = Self;
 
-    #[must_use]
     fn sub(self, other: Self) -> Self::Output {
         Self(self.0 - other.0)
     }
