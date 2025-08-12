@@ -85,6 +85,14 @@ impl SubAssign for Metres {
 #[repr(transparent)]
 pub struct MetresPerSecond(pub f64);
 
+impl MetresPerSecond {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+}
+
 impl Default for MetresPerSecond {
     fn default() -> Self {
         Self(0.0)
@@ -283,6 +291,8 @@ mod tests {
         assert!(one_mps < two_mps);
         let minus_one_mps = MetresPerSecond(-1.0);
         assert_eq!(minus_one_mps, -one_mps);
+
+        assert_eq!(one_mps, minus_one_mps.abs());
 
         assert_eq!(minus_one_mps, one_mps - two_mps);
         one_mps_clone -= two_mps;
