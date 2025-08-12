@@ -30,6 +30,14 @@ use serde::{Deserialize, Serialize};
 #[repr(transparent)]
 pub struct Metres(pub f64);
 
+impl Metres {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+}
+
 impl Default for Metres {
     fn default() -> Self {
         Self(0.0)
@@ -243,6 +251,8 @@ mod tests {
         assert!(one_m < two_m);
         let minus_one_m = Metres(-1.0);
         assert_eq!(minus_one_m, -one_m);
+
+        assert_eq!(one_m, minus_one_m.abs());
 
         assert_eq!(minus_one_m, one_m - two_m);
         one_m_clone -= two_m;
