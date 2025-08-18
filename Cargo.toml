@@ -1,6 +1,6 @@
 [package]
 name = "icao-units"
-version = "1.1.1"
+version = "1.1.2"
 authors = ["Ken Barker <ken.barker@via-technology.aero>"]
 description = "Units for air navigation as defined in ICAO Annex 5."
 documentation = "https://docs.rs/icao-units/"
