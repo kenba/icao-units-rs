@@ -36,6 +36,12 @@ impl Metres {
     pub const fn abs(self) -> Self {
         Self(self.0.abs())
     }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
 }
 
 impl Default for Metres {
@@ -261,6 +267,7 @@ mod tests {
         assert_eq!(minus_one_m, -one_m);
 
         assert_eq!(one_m, minus_one_m.abs());
+        assert_eq!(one_m, two_m.half());
 
         assert_eq!(minus_one_m, one_m - two_m);
         one_m_clone -= two_m;
