@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Ken Barker
+// Copyright (c) 2024-2025 Ken Barker
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -23,6 +23,7 @@
 
 use crate::si;
 use core::convert::From;
+use core::ops::{Add, AddAssign, Neg, Sub, SubAssign};
 use serde::{Deserialize, Serialize};
 
 /// A Nautical Mile `newtype` for representing distance.
@@ -31,6 +32,62 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
 pub struct NauticalMiles(pub f64);
+
+impl NauticalMiles {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
+}
+
+impl Default for NauticalMiles {
+    fn default() -> Self {
+        Self(0.0)
+    }
+}
+
+impl Add for NauticalMiles {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self::Output {
+        Self(self.0 + other.0)
+    }
+}
+
+impl AddAssign for NauticalMiles {
+    fn add_assign(&mut self, other: Self) {
+        *self = *self + other;
+    }
+}
+
+impl Neg for NauticalMiles {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self(0.0 - self.0)
+    }
+}
+
+impl Sub for NauticalMiles {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self::Output {
+        Self(self.0 - other.0)
+    }
+}
+
+impl SubAssign for NauticalMiles {
+    fn sub_assign(&mut self, other: Self) {
+        *self = *self - other;
+    }
+}
 
 /// The length of a Nautical Mile (NM) in metres (m).
 ///
@@ -57,6 +114,62 @@ impl From<NauticalMiles> for si::Metres {
 #[repr(transparent)]
 pub struct Feet(pub f64);
 
+impl Feet {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
+}
+
+impl Default for Feet {
+    fn default() -> Self {
+        Self(0.0)
+    }
+}
+
+impl Add for Feet {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self::Output {
+        Self(self.0 + other.0)
+    }
+}
+
+impl AddAssign for Feet {
+    fn add_assign(&mut self, other: Self) {
+        *self = *self + other;
+    }
+}
+
+impl Neg for Feet {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self(0.0 - self.0)
+    }
+}
+
+impl Sub for Feet {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self::Output {
+        Self(self.0 - other.0)
+    }
+}
+
+impl SubAssign for Feet {
+    fn sub_assign(&mut self, other: Self) {
+        *self = *self - other;
+    }
+}
+
 /// The length of a foot (ft) in metres (m).
 ///
 /// Definition from ICAO Annex 5 Table 3-3.
@@ -81,6 +194,62 @@ impl From<Feet> for si::Metres {
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
 pub struct Knots(pub f64);
+
+impl Knots {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
+}
+
+impl Default for Knots {
+    fn default() -> Self {
+        Self(0.0)
+    }
+}
+
+impl Add for Knots {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self::Output {
+        Self(self.0 + other.0)
+    }
+}
+
+impl AddAssign for Knots {
+    fn add_assign(&mut self, other: Self) {
+        *self = *self + other;
+    }
+}
+
+impl Neg for Knots {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self(0.0 - self.0)
+    }
+}
+
+impl Sub for Knots {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self::Output {
+        Self(self.0 - other.0)
+    }
+}
+
+impl SubAssign for Knots {
+    fn sub_assign(&mut self, other: Self) {
+        *self = *self - other;
+    }
+}
 
 /// The conversion factor to Knots (kt) from metres per second (m/s).
 ///
@@ -107,11 +276,26 @@ mod tests {
 
     #[test]
     fn test_nautical_miles() {
+        let zero_nm = NauticalMiles::default();
+        assert_eq!(NauticalMiles(0.0), zero_nm);
         let one_nm = NauticalMiles(1.0);
-        let one_nm_clone = one_nm.clone();
+        let mut one_nm_clone = one_nm.clone();
         assert_eq!(one_nm, one_nm_clone);
         let two_nm = NauticalMiles(2.0);
         assert!(one_nm < two_nm);
+        let minus_one_nm = NauticalMiles(-1.0);
+        assert_eq!(minus_one_nm, -one_nm);
+
+        assert_eq!(one_nm, minus_one_nm.abs());
+        assert_eq!(one_nm, two_nm.half());
+
+        assert_eq!(minus_one_nm, one_nm - two_nm);
+        one_nm_clone -= two_nm;
+        assert_eq!(minus_one_nm, one_nm_clone);
+
+        assert_eq!(one_nm, minus_one_nm + two_nm);
+        one_nm_clone += two_nm;
+        assert_eq!(one_nm, one_nm_clone);
 
         let serialized = serde_json::to_string(&one_nm).unwrap();
         let deserialized: NauticalMiles = serde_json::from_str(&serialized).unwrap();
@@ -135,11 +319,26 @@ mod tests {
 
     #[test]
     fn test_feet() {
+        let zero_ft = Feet::default();
+        assert_eq!(Feet(0.0), zero_ft);
         let one_ft = Feet(1.0);
-        let one_ft_clone = one_ft.clone();
+        let mut one_ft_clone = one_ft.clone();
         assert_eq!(one_ft, one_ft_clone);
         let two_ft = Feet(2.0);
         assert!(one_ft < two_ft);
+        let minus_one_ft = Feet(-1.0);
+        assert_eq!(minus_one_ft, -one_ft);
+
+        assert_eq!(one_ft, minus_one_ft.abs());
+        assert_eq!(one_ft, two_ft.half());
+
+        assert_eq!(minus_one_ft, one_ft - two_ft);
+        one_ft_clone -= two_ft;
+        assert_eq!(minus_one_ft, one_ft_clone);
+
+        assert_eq!(one_ft, minus_one_ft + two_ft);
+        one_ft_clone += two_ft;
+        assert_eq!(one_ft, one_ft_clone);
 
         let serialized: String = serde_json::to_string(&one_ft).unwrap();
         let deserialized: Feet = serde_json::from_str(&serialized).unwrap();
@@ -163,11 +362,26 @@ mod tests {
 
     #[test]
     fn test_knots() {
+        let zero_kt = Knots::default();
+        assert_eq!(Knots(0.0), zero_kt);
         let one_kt = Knots(1.0);
-        let one_kt_clone = one_kt.clone();
+        let mut one_kt_clone = one_kt.clone();
         assert_eq!(one_kt, one_kt_clone);
         let two_kt = Knots(2.0);
         assert!(one_kt < two_kt);
+        let minus_one_kt = Knots(-1.0);
+        assert_eq!(minus_one_kt, -one_kt);
+
+        assert_eq!(one_kt, minus_one_kt.abs());
+        assert_eq!(one_kt, two_kt.half());
+
+        assert_eq!(minus_one_kt, one_kt - two_kt);
+        one_kt_clone -= two_kt;
+        assert_eq!(minus_one_kt, one_kt_clone);
+
+        assert_eq!(one_kt, minus_one_kt + two_kt);
+        one_kt_clone += two_kt;
+        assert_eq!(one_kt, one_kt_clone);
 
         let serialized = serde_json::to_string(&one_kt).unwrap();
         let deserialized: Knots = serde_json::from_str(&serialized).unwrap();

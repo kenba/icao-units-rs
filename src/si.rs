@@ -97,6 +97,12 @@ impl MetresPerSecond {
     pub const fn abs(self) -> Self {
         Self(self.0.abs())
     }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
 }
 
 impl Default for MetresPerSecond {
@@ -157,6 +163,20 @@ impl Default for MetresPerSecondSquared {
 #[repr(transparent)]
 pub struct Kelvin(pub f64);
 
+impl Kelvin {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
+}
+
 impl Add for Kelvin {
     type Output = Self;
 
@@ -198,10 +218,38 @@ impl SubAssign for Kelvin {
 #[repr(transparent)]
 pub struct Pascals(pub f64);
 
+impl Pascals {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
+}
+
 /// A Kilograms `newtype` for representing mass.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
 pub struct Kilograms(pub f64);
+
+impl Kilograms {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
+}
 
 impl Default for Kilograms {
     fn default() -> Self {
@@ -300,6 +348,7 @@ mod tests {
         assert_eq!(minus_one_mps, -one_mps);
 
         assert_eq!(one_mps, minus_one_mps.abs());
+        assert_eq!(one_mps, two_mps.half());
 
         assert_eq!(minus_one_mps, one_mps - two_mps);
         one_mps_clone -= two_mps;
@@ -349,6 +398,9 @@ mod tests {
         let minus_one_k = Kelvin(-1.0);
         assert_eq!(minus_one_k, -one_k);
 
+        assert_eq!(one_k, minus_one_k.abs());
+        assert_eq!(one_k, two_k.half());
+
         assert_eq!(minus_one_k, one_k - two_k);
         one_k_clone -= two_k;
         assert_eq!(minus_one_k, one_k_clone);
@@ -374,6 +426,10 @@ mod tests {
         assert_eq!(one_pa, one_pa_clone);
         let two_pa = Pascals(2.0);
         assert!(one_pa < two_pa);
+        let minus_one_pa = Pascals(-1.0);
+
+        assert_eq!(one_pa, minus_one_pa.abs());
+        assert_eq!(one_pa, two_pa.half());
 
         let serialized = serde_json::to_string(&one_pa).unwrap();
         let deserialized: Pascals = serde_json::from_str(&serialized).unwrap();
@@ -396,6 +452,9 @@ mod tests {
         assert!(one_kg < two_kg);
         let minus_one_kg = Kilograms(-1.0);
         assert_eq!(minus_one_kg, -one_kg);
+
+        assert_eq!(one_kg, minus_one_kg.abs());
+        assert_eq!(one_kg, two_kg.half());
 
         assert_eq!(minus_one_kg, one_kg - two_kg);
         one_kg_clone -= two_kg;
