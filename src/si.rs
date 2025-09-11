@@ -86,6 +86,67 @@ impl SubAssign for Metres {
     }
 }
 
+/// A `Seconds` `newtype` for representing time.
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[repr(transparent)]
+pub struct Seconds(pub f64);
+
+impl Seconds {
+    /// The absolute value.
+    #[must_use]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+
+    /// Half of the value.
+    #[must_use]
+    pub fn half(self) -> Self {
+        Self(0.5 * self.0)
+    }
+}
+
+impl Default for Seconds {
+    fn default() -> Self {
+        Self(0.0)
+    }
+}
+
+impl Add for Seconds {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self::Output {
+        Self(self.0 + other.0)
+    }
+}
+
+impl AddAssign for Seconds {
+    fn add_assign(&mut self, other: Self) {
+        *self = *self + other;
+    }
+}
+
+impl Neg for Seconds {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self(0.0 - self.0)
+    }
+}
+
+impl Sub for Seconds {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self::Output {
+        Self(self.0 - other.0)
+    }
+}
+
+impl SubAssign for Seconds {
+    fn sub_assign(&mut self, other: Self) {
+        *self = *self - other;
+    }
+}
+
 /// A `MetresPerSecond` `newtype` for representing speed.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
@@ -333,6 +394,39 @@ mod tests {
         let _serde_error = serde_json::from_str::<Metres>(&bad_text).unwrap_err();
 
         print!("Metres: {:?}", one_m);
+    }
+
+    #[test]
+    fn test_seconds() {
+        let zero_s = Seconds::default();
+        assert_eq!(Seconds(0.0), zero_s);
+        let one_s = Seconds(1.0);
+        let mut one_s_clone = one_s.clone();
+        assert_eq!(one_s, one_s_clone);
+        let two_s = Seconds(2.0);
+        assert!(one_s < two_s);
+        let minus_one_s = Seconds(-1.0);
+        assert_eq!(minus_one_s, -one_s);
+
+        assert_eq!(one_s, minus_one_s.abs());
+        assert_eq!(one_s, two_s.half());
+
+        assert_eq!(minus_one_s, one_s - two_s);
+        one_s_clone -= two_s;
+        assert_eq!(minus_one_s, one_s_clone);
+
+        assert_eq!(one_s, minus_one_s + two_s);
+        one_s_clone += two_s;
+        assert_eq!(one_s, one_s_clone);
+
+        let serialized = serde_json::to_string(&one_s).unwrap();
+        let deserialized: Seconds = serde_json::from_str(&serialized).unwrap();
+        assert_eq!(one_s, deserialized);
+
+        let bad_text = "junk";
+        let _serde_error = serde_json::from_str::<Seconds>(&bad_text).unwrap_err();
+
+        print!("Seconds: {:?}", one_s);
     }
 
     #[test]
