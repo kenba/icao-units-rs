@@ -86,6 +86,12 @@ impl SubAssign for Metres {
     }
 }
 
+impl From<Metres> for f64 {
+    fn from(value: Metres) -> Self {
+        value.0
+    }
+}
+
 /// A `Seconds` `newtype` for representing time.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
@@ -144,6 +150,12 @@ impl Sub for Seconds {
 impl SubAssign for Seconds {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
+    }
+}
+
+impl From<Seconds> for f64 {
+    fn from(value: Seconds) -> Self {
+        value.0
     }
 }
 
@@ -208,6 +220,12 @@ impl SubAssign for MetresPerSecond {
     }
 }
 
+impl From<MetresPerSecond> for f64 {
+    fn from(value: MetresPerSecond) -> Self {
+        value.0
+    }
+}
+
 /// A `MetresPerSecondSquared` `newtype` for representing acceleration.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
@@ -216,6 +234,12 @@ pub struct MetresPerSecondSquared(pub f64);
 impl Default for MetresPerSecondSquared {
     fn default() -> Self {
         Self(0.0)
+    }
+}
+
+impl From<MetresPerSecondSquared> for f64 {
+    fn from(value: MetresPerSecondSquared) -> Self {
+        value.0
     }
 }
 
@@ -274,6 +298,12 @@ impl SubAssign for Kelvin {
     }
 }
 
+impl From<Kelvin> for f64 {
+    fn from(value: Kelvin) -> Self {
+        value.0
+    }
+}
+
 /// A Pascals `newtype` for representing pressure.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
@@ -290,6 +320,12 @@ impl Pascals {
     #[must_use]
     pub fn half(self) -> Self {
         Self(0.5 * self.0)
+    }
+}
+
+impl From<Pascals> for f64 {
+    fn from(value: Pascals) -> Self {
+        value.0
     }
 }
 
@@ -354,9 +390,21 @@ impl SubAssign for Kilograms {
     }
 }
 
+impl From<Kilograms> for f64 {
+    fn from(value: Kilograms) -> Self {
+        value.0
+    }
+}
+
 /// A Kilograms `newtype` for representing density.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct KilogramsPerCubicMetre(pub f64);
+
+impl From<KilogramsPerCubicMetre> for f64 {
+    fn from(value: KilogramsPerCubicMetre) -> Self {
+        value.0
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -374,6 +422,8 @@ mod tests {
         assert!(one_m < two_m);
         let minus_one_m = Metres(-1.0);
         assert_eq!(minus_one_m, -one_m);
+        let result: f64 = minus_one_m.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_m, minus_one_m.abs());
         assert_eq!(one_m, two_m.half());
@@ -407,6 +457,8 @@ mod tests {
         assert!(one_s < two_s);
         let minus_one_s = Seconds(-1.0);
         assert_eq!(minus_one_s, -one_s);
+        let result: f64 = minus_one_s.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_s, minus_one_s.abs());
         assert_eq!(one_s, two_s.half());
@@ -440,6 +492,8 @@ mod tests {
         assert!(one_mps < two_mps);
         let minus_one_mps = MetresPerSecond(-1.0);
         assert_eq!(minus_one_mps, -one_mps);
+        let result: f64 = minus_one_mps.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_mps, minus_one_mps.abs());
         assert_eq!(one_mps, two_mps.half());
@@ -471,6 +525,8 @@ mod tests {
         assert_eq!(one_mps2, one_mps2_clone);
         let two_mps2 = MetresPerSecondSquared(2.0);
         assert!(one_mps2 < two_mps2);
+        let result: f64 = two_mps2.into();
+        assert_eq!(2.0, result);
 
         let serialized = serde_json::to_string(&one_mps2).unwrap();
         let deserialized: MetresPerSecondSquared = serde_json::from_str(&serialized).unwrap();
@@ -491,6 +547,8 @@ mod tests {
         assert!(one_k < two_k);
         let minus_one_k = Kelvin(-1.0);
         assert_eq!(minus_one_k, -one_k);
+        let result: f64 = minus_one_k.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_k, minus_one_k.abs());
         assert_eq!(one_k, two_k.half());
@@ -521,6 +579,8 @@ mod tests {
         let two_pa = Pascals(2.0);
         assert!(one_pa < two_pa);
         let minus_one_pa = Pascals(-1.0);
+        let result: f64 = minus_one_pa.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_pa, minus_one_pa.abs());
         assert_eq!(one_pa, two_pa.half());
@@ -546,6 +606,8 @@ mod tests {
         assert!(one_kg < two_kg);
         let minus_one_kg = Kilograms(-1.0);
         assert_eq!(minus_one_kg, -one_kg);
+        let result: f64 = minus_one_kg.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_kg, minus_one_kg.abs());
         assert_eq!(one_kg, two_kg.half());
@@ -575,6 +637,8 @@ mod tests {
         assert_eq!(one_kgm3, one_kgm3_clone);
         let two_kgm3 = KilogramsPerCubicMetre(2.0);
         assert!(one_kgm3 < two_kgm3);
+        let result: f64 = two_kgm3.into();
+        assert_eq!(2.0, result);
 
         let serialized = serde_json::to_string(&one_kgm3).unwrap();
         let deserialized: KilogramsPerCubicMetre = serde_json::from_str(&serialized).unwrap();

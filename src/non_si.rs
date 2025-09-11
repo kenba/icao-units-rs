@@ -106,6 +106,12 @@ impl From<NauticalMiles> for si::Metres {
     }
 }
 
+impl From<NauticalMiles> for f64 {
+    fn from(value: NauticalMiles) -> Self {
+        value.0
+    }
+}
+
 /// A Feet `newtype` for representing altitude.
 ///
 /// Used to report aircraft altitude below the
@@ -184,6 +190,12 @@ impl From<si::Metres> for Feet {
 impl From<Feet> for si::Metres {
     fn from(a: Feet) -> Self {
         Self(a.0 * METRES_PER_FOOT)
+    }
+}
+
+impl From<Feet> for f64 {
+    fn from(value: Feet) -> Self {
+        value.0
     }
 }
 
@@ -269,6 +281,12 @@ impl From<Knots> for si::MetresPerSecond {
     }
 }
 
+impl From<Knots> for f64 {
+    fn from(value: Knots) -> Self {
+        value.0
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -285,6 +303,8 @@ mod tests {
         assert!(one_nm < two_nm);
         let minus_one_nm = NauticalMiles(-1.0);
         assert_eq!(minus_one_nm, -one_nm);
+        let result: f64 = minus_one_nm.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_nm, minus_one_nm.abs());
         assert_eq!(one_nm, two_nm.half());
@@ -328,6 +348,8 @@ mod tests {
         assert!(one_ft < two_ft);
         let minus_one_ft = Feet(-1.0);
         assert_eq!(minus_one_ft, -one_ft);
+        let result: f64 = minus_one_ft.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_ft, minus_one_ft.abs());
         assert_eq!(one_ft, two_ft.half());
@@ -371,6 +393,8 @@ mod tests {
         assert!(one_kt < two_kt);
         let minus_one_kt = Knots(-1.0);
         assert_eq!(minus_one_kt, -one_kt);
+        let result: f64 = minus_one_kt.into();
+        assert_eq!(-1.0, result);
 
         assert_eq!(one_kt, minus_one_kt.abs());
         assert_eq!(one_kt, two_kt.half());
