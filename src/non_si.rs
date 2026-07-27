@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2025 Ken Barker
+// Copyright (c) 2024-2026 Ken Barker
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -24,36 +24,38 @@
 use crate::si;
 use core::convert::From;
 use core::ops::{Add, AddAssign, Neg, Sub, SubAssign};
+use num_traits::Float;
 use serde::{Deserialize, Serialize};
 
 /// A Nautical Mile `newtype` for representing distance.
 ///
 /// Used in navigation, generally for distances in excess of `4 000` m.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct NauticalMiles(pub f64);
+pub struct NauticalMiles<T: Float>(pub T);
 
-impl NauticalMiles {
+impl<T: Float> NauticalMiles<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
-impl Default for NauticalMiles {
+impl<T: Float> Default for NauticalMiles<T> {
     fn default() -> Self {
-        Self(0.0)
+        Self(T::zero())
     }
 }
 
-impl Add for NauticalMiles {
+impl<T: Float> Add for NauticalMiles<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -61,21 +63,21 @@ impl Add for NauticalMiles {
     }
 }
 
-impl AddAssign for NauticalMiles {
+impl<T: Float> AddAssign for NauticalMiles<T> {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
     }
 }
 
-impl Neg for NauticalMiles {
+impl<T: Float> Neg for NauticalMiles<T> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(0.0 - self.0)
+        Self(T::zero() - self.0)
     }
 }
 
-impl Sub for NauticalMiles {
+impl<T: Float> Sub for NauticalMiles<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -83,7 +85,7 @@ impl Sub for NauticalMiles {
     }
 }
 
-impl SubAssign for NauticalMiles {
+impl<T: Float> SubAssign for NauticalMiles<T> {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
     }
@@ -94,21 +96,19 @@ impl SubAssign for NauticalMiles {
 /// Definition from ICAO Annex 5 Table 3-3.
 pub const METRES_PER_NAUTICAL_MILE: f64 = 1_852.0;
 
-impl From<si::Metres> for NauticalMiles {
-    fn from(a: si::Metres) -> Self {
-        Self(a.0 / METRES_PER_NAUTICAL_MILE)
+impl<T: Float> From<si::Metres<T>> for NauticalMiles<T> {
+    fn from(a: si::Metres<T>) -> Self {
+        let metres_per_nautical_mile =
+            T::from(METRES_PER_NAUTICAL_MILE).expect("Could not convert constant to Float");
+        Self(a.0 / metres_per_nautical_mile)
     }
 }
 
-impl From<NauticalMiles> for si::Metres {
-    fn from(a: NauticalMiles) -> Self {
-        Self(a.0 * METRES_PER_NAUTICAL_MILE)
-    }
-}
-
-impl From<NauticalMiles> for f64 {
-    fn from(value: NauticalMiles) -> Self {
-        value.0
+impl<T: Float> From<NauticalMiles<T>> for si::Metres<T> {
+    fn from(a: NauticalMiles<T>) -> Self {
+        let metres_per_nautical_mile =
+            T::from(METRES_PER_NAUTICAL_MILE).expect("Could not convert constant to Float");
+        Self(a.0 * metres_per_nautical_mile)
     }
 }
 
@@ -116,31 +116,32 @@ impl From<NauticalMiles> for f64 {
 ///
 /// Used to report aircraft altitude below the
 /// [transition altitude](https://en.wikipedia.org/wiki/Flight_level#Transition_altitude).
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct Feet(pub f64);
+pub struct Feet<T: Float>(pub T);
 
-impl Feet {
+impl<T: Float> Feet<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
-impl Default for Feet {
+impl<T: Float> Default for Feet<T> {
     fn default() -> Self {
-        Self(0.0)
+        Self(T::zero())
     }
 }
 
-impl Add for Feet {
+impl<T: Float> Add for Feet<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -148,21 +149,21 @@ impl Add for Feet {
     }
 }
 
-impl AddAssign for Feet {
+impl<T: Float> AddAssign for Feet<T> {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
     }
 }
 
-impl Neg for Feet {
+impl<T: Float> Neg for Feet<T> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(0.0 - self.0)
+        Self(T::zero() - self.0)
     }
 }
 
-impl Sub for Feet {
+impl<T: Float> Sub for Feet<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -170,7 +171,7 @@ impl Sub for Feet {
     }
 }
 
-impl SubAssign for Feet {
+impl<T: Float> SubAssign for Feet<T> {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
     }
@@ -181,21 +182,19 @@ impl SubAssign for Feet {
 /// Definition from ICAO Annex 5 Table 3-3.
 pub const METRES_PER_FOOT: f64 = 0.304_8;
 
-impl From<si::Metres> for Feet {
-    fn from(a: si::Metres) -> Self {
-        Self(a.0 / METRES_PER_FOOT)
+impl<T: Float> From<si::Metres<T>> for Feet<T> {
+    fn from(a: si::Metres<T>) -> Self {
+        let metres_per_foot =
+            T::from(METRES_PER_FOOT).expect("Could not convert constant to Float");
+        Self(a.0 / metres_per_foot)
     }
 }
 
-impl From<Feet> for si::Metres {
-    fn from(a: Feet) -> Self {
-        Self(a.0 * METRES_PER_FOOT)
-    }
-}
-
-impl From<Feet> for f64 {
-    fn from(value: Feet) -> Self {
-        value.0
+impl<T: Float> From<Feet<T>> for si::Metres<T> {
+    fn from(a: Feet<T>) -> Self {
+        let metres_per_foot =
+            T::from(METRES_PER_FOOT).expect("Could not convert constant to Float");
+        Self(a.0 * metres_per_foot)
     }
 }
 
@@ -203,31 +202,32 @@ impl From<Feet> for f64 {
 ///
 /// A conversion of 1 kt = 0.5 m/s is used in ICAO Annexes for the representation
 /// of wind speed.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct Knots(pub f64);
+pub struct Knots<T: Float>(pub T);
 
-impl Knots {
+impl<T: Float> Knots<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
-impl Default for Knots {
+impl<T: Float> Default for Knots<T> {
     fn default() -> Self {
-        Self(0.0)
+        Self(T::zero())
     }
 }
 
-impl Add for Knots {
+impl<T: Float> Add for Knots<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -235,21 +235,21 @@ impl Add for Knots {
     }
 }
 
-impl AddAssign for Knots {
+impl<T: Float> AddAssign for Knots<T> {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
     }
 }
 
-impl Neg for Knots {
+impl<T: Float> Neg for Knots<T> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(0.0 - self.0)
+        Self(T::zero() - self.0)
     }
 }
 
-impl Sub for Knots {
+impl<T: Float> Sub for Knots<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -257,7 +257,7 @@ impl Sub for Knots {
     }
 }
 
-impl SubAssign for Knots {
+impl<T: Float> SubAssign for Knots<T> {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
     }
@@ -269,21 +269,19 @@ impl SubAssign for Knots {
 /// because it is more precise than the ICAO definition: 0.514 444.
 pub const METRES_PER_SECOND_TO_KNOTS: f64 = METRES_PER_NAUTICAL_MILE / 3600.0;
 
-impl From<si::MetresPerSecond> for Knots {
-    fn from(a: si::MetresPerSecond) -> Self {
-        Self(a.0 / METRES_PER_SECOND_TO_KNOTS)
+impl<T: Float> From<si::MetresPerSecond<T>> for Knots<T> {
+    fn from(a: si::MetresPerSecond<T>) -> Self {
+        let metres_per_second_to_knots =
+            T::from(METRES_PER_SECOND_TO_KNOTS).expect("Could not convert constant to Float");
+        Self(a.0 / metres_per_second_to_knots)
     }
 }
 
-impl From<Knots> for si::MetresPerSecond {
-    fn from(a: Knots) -> Self {
-        Self(a.0 * METRES_PER_SECOND_TO_KNOTS)
-    }
-}
-
-impl From<Knots> for f64 {
-    fn from(value: Knots) -> Self {
-        value.0
+impl<T: Float> From<Knots<T>> for si::MetresPerSecond<T> {
+    fn from(a: Knots<T>) -> Self {
+        let metres_per_second_to_knots =
+            T::from(METRES_PER_SECOND_TO_KNOTS).expect("Could not convert constant to Float");
+        Self(a.0 * metres_per_second_to_knots)
     }
 }
 
@@ -303,7 +301,7 @@ mod tests {
         assert!(one_nm < two_nm);
         let minus_one_nm = NauticalMiles(-1.0);
         assert_eq!(minus_one_nm, -one_nm);
-        let result: f64 = minus_one_nm.into();
+        let result: f64 = minus_one_nm.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_nm, minus_one_nm.abs());
@@ -318,11 +316,11 @@ mod tests {
         assert_eq!(one_nm, one_nm_clone);
 
         let serialized = serde_json::to_string(&one_nm).unwrap();
-        let deserialized: NauticalMiles = serde_json::from_str(&serialized).unwrap();
+        let deserialized: NauticalMiles<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_nm, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<NauticalMiles>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<NauticalMiles<f64>>(&bad_text).unwrap_err();
 
         print!("NauticalMiles: {:?}", one_nm);
     }
@@ -348,7 +346,7 @@ mod tests {
         assert!(one_ft < two_ft);
         let minus_one_ft = Feet(-1.0);
         assert_eq!(minus_one_ft, -one_ft);
-        let result: f64 = minus_one_ft.into();
+        let result: f64 = minus_one_ft.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_ft, minus_one_ft.abs());
@@ -363,11 +361,11 @@ mod tests {
         assert_eq!(one_ft, one_ft_clone);
 
         let serialized: String = serde_json::to_string(&one_ft).unwrap();
-        let deserialized: Feet = serde_json::from_str(&serialized).unwrap();
+        let deserialized: Feet<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_ft, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<Feet>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<Feet<f64>>(&bad_text).unwrap_err();
 
         print!("Feet: {:?}", one_ft);
     }
@@ -393,7 +391,7 @@ mod tests {
         assert!(one_kt < two_kt);
         let minus_one_kt = Knots(-1.0);
         assert_eq!(minus_one_kt, -one_kt);
-        let result: f64 = minus_one_kt.into();
+        let result: f64 = minus_one_kt.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_kt, minus_one_kt.abs());
@@ -408,11 +406,11 @@ mod tests {
         assert_eq!(one_kt, one_kt_clone);
 
         let serialized = serde_json::to_string(&one_kt).unwrap();
-        let deserialized: Knots = serde_json::from_str(&serialized).unwrap();
+        let deserialized: Knots<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_kt, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<Knots>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<Knots<f64>>(&bad_text).unwrap_err();
 
         print!("Knots: {:?}", one_kt);
     }

@@ -13,6 +13,7 @@ license = "MIT"
 edition = "2024"
 
 [dependencies]
+num-traits = {version = "0.2", default-features = false, features = ["libm"] }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 
 [dev-dependencies]

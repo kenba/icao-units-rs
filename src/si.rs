@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2025 Ken Barker
+// Copyright (c) 2024-2026 Ken Barker
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -23,34 +23,36 @@
 //! See ICAO Annex 5 Chapter 3.
 
 use core::ops::{Add, AddAssign, Neg, Sub, SubAssign};
+use num_traits::Float;
 use serde::{Deserialize, Serialize};
 
 /// A `Metres` `newtype` for representing distance.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct Metres(pub f64);
+pub struct Metres<T: Float>(pub T);
 
-impl Metres {
+impl<T: Float> Metres<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
-impl Default for Metres {
+impl<T: Float> Default for Metres<T> {
     fn default() -> Self {
-        Self(0.0)
+        Self(T::zero())
     }
 }
 
-impl Add for Metres {
+impl<T: Float> Add for Metres<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -58,21 +60,21 @@ impl Add for Metres {
     }
 }
 
-impl AddAssign for Metres {
+impl<T: Float> AddAssign for Metres<T> {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
     }
 }
 
-impl Neg for Metres {
+impl<T: Float> Neg for Metres<T> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(0.0 - self.0)
+        Self(T::zero() - self.0)
     }
 }
 
-impl Sub for Metres {
+impl<T: Float> Sub for Metres<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -80,44 +82,39 @@ impl Sub for Metres {
     }
 }
 
-impl SubAssign for Metres {
+impl<T: Float> SubAssign for Metres<T> {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
-    }
-}
-
-impl From<Metres> for f64 {
-    fn from(value: Metres) -> Self {
-        value.0
     }
 }
 
 /// A `Seconds` `newtype` for representing time.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct Seconds(pub f64);
+pub struct Seconds<T: Float>(pub T);
 
-impl Seconds {
+impl<T: Float> Seconds<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
-impl Default for Seconds {
+impl<T: Float> Default for Seconds<T> {
     fn default() -> Self {
-        Self(0.0)
+        Self(T::zero())
     }
 }
 
-impl Add for Seconds {
+impl<T: Float> Add for Seconds<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -125,21 +122,21 @@ impl Add for Seconds {
     }
 }
 
-impl AddAssign for Seconds {
+impl<T: Float> AddAssign for Seconds<T> {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
     }
 }
 
-impl Neg for Seconds {
+impl<T: Float> Neg for Seconds<T> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(0.0 - self.0)
+        Self(T::zero() - self.0)
     }
 }
 
-impl Sub for Seconds {
+impl<T: Float> Sub for Seconds<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -147,44 +144,39 @@ impl Sub for Seconds {
     }
 }
 
-impl SubAssign for Seconds {
+impl<T: Float> SubAssign for Seconds<T> {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
-    }
-}
-
-impl From<Seconds> for f64 {
-    fn from(value: Seconds) -> Self {
-        value.0
     }
 }
 
 /// A `MetresPerSecond` `newtype` for representing speed.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct MetresPerSecond(pub f64);
+pub struct MetresPerSecond<T: Float>(pub T);
 
-impl MetresPerSecond {
+impl<T: Float> MetresPerSecond<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
-impl Default for MetresPerSecond {
+impl<T: Float> Default for MetresPerSecond<T> {
     fn default() -> Self {
-        Self(0.0)
+        Self(T::zero())
     }
 }
 
-impl Add for MetresPerSecond {
+impl<T: Float> Add for MetresPerSecond<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -192,21 +184,21 @@ impl Add for MetresPerSecond {
     }
 }
 
-impl AddAssign for MetresPerSecond {
+impl<T: Float> AddAssign for MetresPerSecond<T> {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
     }
 }
 
-impl Neg for MetresPerSecond {
+impl<T: Float> Neg for MetresPerSecond<T> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(0.0 - self.0)
+        Self(T::zero() - self.0)
     }
 }
 
-impl Sub for MetresPerSecond {
+impl<T: Float> Sub for MetresPerSecond<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -214,55 +206,44 @@ impl Sub for MetresPerSecond {
     }
 }
 
-impl SubAssign for MetresPerSecond {
+impl<T: Float> SubAssign for MetresPerSecond<T> {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
-    }
-}
-
-impl From<MetresPerSecond> for f64 {
-    fn from(value: MetresPerSecond) -> Self {
-        value.0
     }
 }
 
 /// A `MetresPerSecondSquared` `newtype` for representing acceleration.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct MetresPerSecondSquared(pub f64);
+pub struct MetresPerSecondSquared<T: Float>(pub T);
 
-impl Default for MetresPerSecondSquared {
+impl<T: Float> Default for MetresPerSecondSquared<T> {
     fn default() -> Self {
-        Self(0.0)
-    }
-}
-
-impl From<MetresPerSecondSquared> for f64 {
-    fn from(value: MetresPerSecondSquared) -> Self {
-        value.0
+        Self(T::zero())
     }
 }
 
 /// A Kelvin `newtype` for representing temperature.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct Kelvin(pub f64);
+pub struct Kelvin<T: Float>(pub T);
 
-impl Kelvin {
+impl<T: Float> Kelvin<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
-impl Add for Kelvin {
+impl<T: Float> Add for Kelvin<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -270,21 +251,21 @@ impl Add for Kelvin {
     }
 }
 
-impl AddAssign for Kelvin {
+impl<T: Float> AddAssign for Kelvin<T> {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
     }
 }
 
-impl Neg for Kelvin {
+impl<T: Float> Neg for Kelvin<T> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(0.0 - self.0)
+        Self(T::zero() - self.0)
     }
 }
 
-impl Sub for Kelvin {
+impl<T: Float> Sub for Kelvin<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -292,69 +273,59 @@ impl Sub for Kelvin {
     }
 }
 
-impl SubAssign for Kelvin {
+impl<T: Float> SubAssign for Kelvin<T> {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
-    }
-}
-
-impl From<Kelvin> for f64 {
-    fn from(value: Kelvin) -> Self {
-        value.0
     }
 }
 
 /// A Pascals `newtype` for representing pressure.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct Pascals(pub f64);
+pub struct Pascals<T: Float>(pub T);
 
-impl Pascals {
+impl<T: Float> Pascals<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
-    }
-}
-
-impl From<Pascals> for f64 {
-    fn from(value: Pascals) -> Self {
-        value.0
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
 /// A Kilograms `newtype` for representing mass.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[repr(transparent)]
-pub struct Kilograms(pub f64);
+pub struct Kilograms<T: Float>(pub T);
 
-impl Kilograms {
+impl<T: Float> Kilograms<T> {
     /// The absolute value.
     #[must_use]
-    pub const fn abs(self) -> Self {
+    pub fn abs(self) -> Self {
         Self(self.0.abs())
     }
 
     /// Half of the value.
     #[must_use]
     pub fn half(self) -> Self {
-        Self(0.5 * self.0)
+        let half = T::one() / (T::one() + T::one());
+        Self(half * self.0)
     }
 }
 
-impl Default for Kilograms {
+impl<T: Float> Default for Kilograms<T> {
     fn default() -> Self {
-        Self(0.0)
+        Self(T::zero())
     }
 }
 
-impl Add for Kilograms {
+impl<T: Float> Add for Kilograms<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -362,21 +333,21 @@ impl Add for Kilograms {
     }
 }
 
-impl AddAssign for Kilograms {
+impl<T: Float> AddAssign for Kilograms<T> {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
     }
 }
 
-impl Neg for Kilograms {
+impl<T: Float> Neg for Kilograms<T> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(0.0 - self.0)
+        Self(T::zero() - self.0)
     }
 }
 
-impl Sub for Kilograms {
+impl<T: Float> Sub for Kilograms<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -384,36 +355,24 @@ impl Sub for Kilograms {
     }
 }
 
-impl SubAssign for Kilograms {
+impl<T: Float> SubAssign for Kilograms<T> {
     fn sub_assign(&mut self, other: Self) {
         *self = *self - other;
     }
 }
 
-impl From<Kilograms> for f64 {
-    fn from(value: Kilograms) -> Self {
-        value.0
-    }
-}
-
-/// A Kilograms `newtype` for representing density.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
-pub struct KilogramsPerCubicMetre(pub f64);
-
-impl From<KilogramsPerCubicMetre> for f64 {
-    fn from(value: KilogramsPerCubicMetre) -> Self {
-        value.0
-    }
-}
+/// A `KilogramsPerCubicMetre` `newtype` for representing density.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
+pub struct KilogramsPerCubicMetre<T: Float>(pub T);
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json;
+    // use serde_json;
 
     #[test]
     fn test_metres() {
-        let zero_m = Metres::default();
+        let zero_m = Metres::<f64>::default();
         assert_eq!(Metres(0.0), zero_m);
         let one_m = Metres(1.0);
         let mut one_m_clone = one_m.clone();
@@ -422,7 +381,7 @@ mod tests {
         assert!(one_m < two_m);
         let minus_one_m = Metres(-1.0);
         assert_eq!(minus_one_m, -one_m);
-        let result: f64 = minus_one_m.into();
+        let result: f64 = minus_one_m.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_m, minus_one_m.abs());
@@ -437,11 +396,11 @@ mod tests {
         assert_eq!(one_m, one_m_clone);
 
         let serialized = serde_json::to_string(&one_m).unwrap();
-        let deserialized: Metres = serde_json::from_str(&serialized).unwrap();
+        let deserialized: Metres<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_m, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<Metres>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<Metres<f64>>(&bad_text).unwrap_err();
 
         print!("Metres: {:?}", one_m);
     }
@@ -457,7 +416,7 @@ mod tests {
         assert!(one_s < two_s);
         let minus_one_s = Seconds(-1.0);
         assert_eq!(minus_one_s, -one_s);
-        let result: f64 = minus_one_s.into();
+        let result: f64 = minus_one_s.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_s, minus_one_s.abs());
@@ -472,11 +431,11 @@ mod tests {
         assert_eq!(one_s, one_s_clone);
 
         let serialized = serde_json::to_string(&one_s).unwrap();
-        let deserialized: Seconds = serde_json::from_str(&serialized).unwrap();
+        let deserialized: Seconds<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_s, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<Seconds>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<Seconds<f64>>(&bad_text).unwrap_err();
 
         print!("Seconds: {:?}", one_s);
     }
@@ -492,7 +451,7 @@ mod tests {
         assert!(one_mps < two_mps);
         let minus_one_mps = MetresPerSecond(-1.0);
         assert_eq!(minus_one_mps, -one_mps);
-        let result: f64 = minus_one_mps.into();
+        let result: f64 = minus_one_mps.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_mps, minus_one_mps.abs());
@@ -507,11 +466,11 @@ mod tests {
         assert_eq!(one_mps, one_mps_clone);
 
         let serialized = serde_json::to_string(&one_mps).unwrap();
-        let deserialized: MetresPerSecond = serde_json::from_str(&serialized).unwrap();
+        let deserialized: MetresPerSecond<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_mps, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<MetresPerSecond>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<MetresPerSecond<f64>>(&bad_text).unwrap_err();
 
         print!("MetresPerSecond: {:?}", one_mps);
     }
@@ -525,15 +484,16 @@ mod tests {
         assert_eq!(one_mps2, one_mps2_clone);
         let two_mps2 = MetresPerSecondSquared(2.0);
         assert!(one_mps2 < two_mps2);
-        let result: f64 = two_mps2.into();
+        let result: f64 = two_mps2.0;
         assert_eq!(2.0, result);
 
         let serialized = serde_json::to_string(&one_mps2).unwrap();
-        let deserialized: MetresPerSecondSquared = serde_json::from_str(&serialized).unwrap();
+        let deserialized: MetresPerSecondSquared<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_mps2, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<MetresPerSecondSquared>(&bad_text).unwrap_err();
+        let _serde_error =
+            serde_json::from_str::<MetresPerSecondSquared<f64>>(&bad_text).unwrap_err();
 
         print!("MetresPerSecondSquared: {:?}", one_mps2);
     }
@@ -547,7 +507,7 @@ mod tests {
         assert!(one_k < two_k);
         let minus_one_k = Kelvin(-1.0);
         assert_eq!(minus_one_k, -one_k);
-        let result: f64 = minus_one_k.into();
+        let result: f64 = minus_one_k.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_k, minus_one_k.abs());
@@ -562,11 +522,11 @@ mod tests {
         assert_eq!(one_k, one_k_clone);
 
         let serialized = serde_json::to_string(&one_k).unwrap();
-        let deserialized: Kelvin = serde_json::from_str(&serialized).unwrap();
+        let deserialized: Kelvin<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_k, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<Kelvin>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<Kelvin<f64>>(&bad_text).unwrap_err();
 
         print!("Kelvin: {:?}", one_k);
     }
@@ -579,18 +539,18 @@ mod tests {
         let two_pa = Pascals(2.0);
         assert!(one_pa < two_pa);
         let minus_one_pa = Pascals(-1.0);
-        let result: f64 = minus_one_pa.into();
+        let result: f64 = minus_one_pa.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_pa, minus_one_pa.abs());
         assert_eq!(one_pa, two_pa.half());
 
         let serialized = serde_json::to_string(&one_pa).unwrap();
-        let deserialized: Pascals = serde_json::from_str(&serialized).unwrap();
+        let deserialized: Pascals<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_pa, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<Pascals>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<Pascals<f64>>(&bad_text).unwrap_err();
 
         print!("Pascals: {:?}", one_pa);
     }
@@ -606,7 +566,7 @@ mod tests {
         assert!(one_kg < two_kg);
         let minus_one_kg = Kilograms(-1.0);
         assert_eq!(minus_one_kg, -one_kg);
-        let result: f64 = minus_one_kg.into();
+        let result: f64 = minus_one_kg.0;
         assert_eq!(-1.0, result);
 
         assert_eq!(one_kg, minus_one_kg.abs());
@@ -621,11 +581,11 @@ mod tests {
         assert_eq!(one_kg, one_kg_clone);
 
         let serialized = serde_json::to_string(&one_kg).unwrap();
-        let deserialized: Kilograms = serde_json::from_str(&serialized).unwrap();
+        let deserialized: Kilograms<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_kg, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<Kilograms>(&bad_text).unwrap_err();
+        let _serde_error = serde_json::from_str::<Kilograms<f64>>(&bad_text).unwrap_err();
 
         print!("Kilograms: {:?}", one_kg);
     }
@@ -637,15 +597,16 @@ mod tests {
         assert_eq!(one_kgm3, one_kgm3_clone);
         let two_kgm3 = KilogramsPerCubicMetre(2.0);
         assert!(one_kgm3 < two_kgm3);
-        let result: f64 = two_kgm3.into();
+        let result: f64 = two_kgm3.0;
         assert_eq!(2.0, result);
 
         let serialized = serde_json::to_string(&one_kgm3).unwrap();
-        let deserialized: KilogramsPerCubicMetre = serde_json::from_str(&serialized).unwrap();
+        let deserialized: KilogramsPerCubicMetre<f64> = serde_json::from_str(&serialized).unwrap();
         assert_eq!(one_kgm3, deserialized);
 
         let bad_text = "junk";
-        let _serde_error = serde_json::from_str::<KilogramsPerCubicMetre>(&bad_text).unwrap_err();
+        let _serde_error =
+            serde_json::from_str::<KilogramsPerCubicMetre<f64>>(&bad_text).unwrap_err();
 
         print!("KilogramsPerCubicMetre: {:?}", one_kgm3);
     }
