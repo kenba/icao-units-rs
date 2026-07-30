@@ -336,6 +336,16 @@ mod tests {
     }
 
     #[test]
+    fn test_convert_nautical_miles_f32() {
+        let one_nm = NauticalMiles(1.0_f32);
+        let metres = si::Metres::from(one_nm);
+        assert_eq!(1852.0_f32, metres.0);
+
+        let result = NauticalMiles::from(metres);
+        assert_eq!(1.0_f32, result.0);
+    }
+
+    #[test]
     fn test_feet() {
         let zero_ft = Feet::default();
         assert_eq!(Feet(0.0), zero_ft);
@@ -378,6 +388,16 @@ mod tests {
 
         let result = Feet::from(metres);
         assert_eq!(1.0, result.0);
+    }
+
+    #[test]
+    fn test_convert_feet_f32() {
+        let one_foot = Feet(1.0_f32);
+        let metres = si::Metres::from(one_foot);
+        assert_eq!(0.304_8_f32, metres.0);
+
+        let result = Feet::from(metres);
+        assert_eq!(1.0_f32, result.0);
     }
 
     #[test]
@@ -426,5 +446,18 @@ mod tests {
 
         let result = Knots::from(metres_per_second);
         assert_eq!(1.0, result.0);
+    }
+
+    #[test]
+    fn test_convert_knots_f32() {
+        let one_knot = Knots(1.0_f32);
+        let metres_per_second = si::MetresPerSecond::from(one_knot);
+
+        // Definition from ICAO Annex 5 Table 3-3 is 0.514 444
+        assert!(0.514_444_f32 < metres_per_second.0);
+        assert_eq!(0.514_444_5_f32, metres_per_second.0);
+
+        let result = Knots::from(metres_per_second);
+        assert_eq!(1.0_f32, result.0);
     }
 }
