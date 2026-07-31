@@ -91,6 +91,18 @@ impl<T: Float> SubAssign for NauticalMiles<T> {
     }
 }
 
+impl From<NauticalMiles<Self>> for f64 {
+    fn from(value: NauticalMiles<Self>) -> Self {
+        value.0
+    }
+}
+
+impl From<NauticalMiles<Self>> for f32 {
+    fn from(value: NauticalMiles<Self>) -> Self {
+        value.0
+    }
+}
+
 /// The length of a Nautical Mile (NM) in metres (m).
 ///
 /// Definition from ICAO Annex 5 Table 3-3.
@@ -177,6 +189,17 @@ impl<T: Float> SubAssign for Feet<T> {
     }
 }
 
+impl From<Feet<Self>> for f64 {
+    fn from(value: Feet<Self>) -> Self {
+        value.0
+    }
+}
+
+impl From<Feet<Self>> for f32 {
+    fn from(value: Feet<Self>) -> Self {
+        value.0
+    }
+}
 /// The length of a foot (ft) in metres (m).
 ///
 /// Definition from ICAO Annex 5 Table 3-3.
@@ -263,6 +286,17 @@ impl<T: Float> SubAssign for Knots<T> {
     }
 }
 
+impl From<Knots<Self>> for f64 {
+    fn from(value: Knots<Self>) -> Self {
+        value.0
+    }
+}
+
+impl From<Knots<Self>> for f32 {
+    fn from(value: Knots<Self>) -> Self {
+        value.0
+    }
+}
 /// The conversion factor to Knots (kt) from metres per second (m/s).
 ///
 /// Calculated from `METRES_PER_NAUTICAL_MILE` / seconds in an hour,
@@ -301,8 +335,12 @@ mod tests {
         assert!(one_nm < two_nm);
         let minus_one_nm = NauticalMiles(-1.0);
         assert_eq!(minus_one_nm, -one_nm);
-        let result: f64 = minus_one_nm.0;
+        let result: f64 = minus_one_nm.into();
         assert_eq!(-1.0, result);
+
+        let minus_one_m_f32 = NauticalMiles(-1.0_f32);
+        let result_f32: f32 = minus_one_m_f32.into();
+        assert_eq!(-1.0_f32, result_f32);
 
         assert_eq!(one_nm, minus_one_nm.abs());
         assert_eq!(one_nm, two_nm.half());
@@ -356,8 +394,12 @@ mod tests {
         assert!(one_ft < two_ft);
         let minus_one_ft = Feet(-1.0);
         assert_eq!(minus_one_ft, -one_ft);
-        let result: f64 = minus_one_ft.0;
+        let result: f64 = minus_one_ft.into();
         assert_eq!(-1.0, result);
+
+        let minus_one_m_f32 = Feet(-1.0_f32);
+        let result_f32: f32 = minus_one_m_f32.into();
+        assert_eq!(-1.0_f32, result_f32);
 
         assert_eq!(one_ft, minus_one_ft.abs());
         assert_eq!(one_ft, two_ft.half());
@@ -411,8 +453,12 @@ mod tests {
         assert!(one_kt < two_kt);
         let minus_one_kt = Knots(-1.0);
         assert_eq!(minus_one_kt, -one_kt);
-        let result: f64 = minus_one_kt.0;
+        let result: f64 = minus_one_kt.into();
         assert_eq!(-1.0, result);
+
+        let minus_one_m_f32 = Knots(-1.0_f32);
+        let result_f32: f32 = minus_one_m_f32.into();
+        assert_eq!(-1.0_f32, result_f32);
 
         assert_eq!(one_kt, minus_one_kt.abs());
         assert_eq!(one_kt, two_kt.half());
